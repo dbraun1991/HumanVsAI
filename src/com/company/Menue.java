@@ -11,15 +11,26 @@ public class Menue {
     // Dimension of window / canvas
     int width = 1800;
     int height = 1000;
+    // GUI
+    GUI gui;
+    // Window
+    JFrame frame;
+    // Buttons
+    JButton btnloadGame;
+    JButton btnHuman;
+    JButton btnAI;
+    JButton btnTraining;
+
+
 
 
     public Menue (int width, int height) {
         this.width = width;
         this.height = height;
 
-        // call GUI
-        GUI gui = new GUI(this.width, this.height, true);
-        JFrame frame = new JFrame();
+        gui = new GUI(this.width, this.height, true);
+
+        frame = new JFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(gui.myView);
         frame.pack();
@@ -27,8 +38,13 @@ public class Menue {
         frame.setVisible(true);
         frame.repaint(100);
 
+    }
 
-        JButton btnloadGame = new JButton("Load Game");
+    public void operate () {
+        // call GUI
+
+
+        btnloadGame = new JButton("Load Game");
         btnloadGame.setBounds(20,20,100,40);
         btnloadGame.addActionListener(new ActionListener() {
             @Override
@@ -37,7 +53,7 @@ public class Menue {
                 frame.getContentPane().remove(btnloadGame);
 
                 // Play yourself
-                JButton btnHuman = new JButton("Human Player");
+                btnHuman = new JButton("Human Player");
                 btnHuman.setBounds(20,20,150,40);
                 btnHuman.addActionListener(new ActionListener() {
                     @Override
@@ -48,7 +64,7 @@ public class Menue {
                 frame.getContentPane().add(btnHuman);
 
                 // Show best Calculation
-                JButton btnAI = new JButton("show best AI");
+                btnAI = new JButton("show best AI");
                 btnAI.setBounds(220,20,150,40);
                 btnAI.addActionListener(new ActionListener() {
                     @Override
@@ -59,7 +75,7 @@ public class Menue {
                 frame.getContentPane().add(btnAI);
 
                 // Training
-                JButton btnTraining = new JButton("train AI");
+                btnTraining = new JButton("train AI");
                 btnTraining.setBounds(420,20,150,40);
                 btnTraining.addActionListener(new ActionListener() {
                     @Override
@@ -78,11 +94,6 @@ public class Menue {
         // play myself
 
         // let computer work
-
-    }
-
-    public void operate () {
-
     }
 
 
