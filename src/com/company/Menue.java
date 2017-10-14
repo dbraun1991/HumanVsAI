@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.GUI.GUI;
+import com.company.Game.Game;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -20,8 +21,8 @@ public class Menue {
     JButton btnHuman;
     JButton btnAI;
     JButton btnTraining;
-
-
+    // Instance
+    Game game;
 
 
     public Menue (int width, int height) {
