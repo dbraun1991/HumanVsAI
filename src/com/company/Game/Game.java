@@ -87,7 +87,7 @@ public class Game {
 
 
 
-    public void giveInput (double [] inputs) {
+    void giveInput (double [] inputs) {
         this.newInputs = inputs;
         if (this.isRunning) {
             computeInputs(this.newInputs);
@@ -96,7 +96,7 @@ public class Game {
 
 
 
-    public void computeInputs(double [] inputs) {
+    void computeInputs(double [] inputs) {
         int playerX = this.myPlayer.getMyPosX();
         int playerY = this.myPlayer.getMyPosY();
 
@@ -110,7 +110,7 @@ public class Game {
 
         // check vertical movement
         if (inputs[1]> 0.5 && inputs[1] < 1.1) {
-            // "up" is pressed (active junmp)
+            // "up" is pressed (active jump)
             if (isSolid( playerX , playerY+1 )) {
                 this.jump = 2;
             }
@@ -178,7 +178,7 @@ public class Game {
 
 
 
-    public boolean isAccessible (int x, int y) {
+    boolean isAccessible (int x, int y) {
         boolean myReturn = true;
 
         if (y > 4 || y < 0) {
@@ -196,7 +196,7 @@ public class Game {
 
 
 
-    public boolean isSolid (int x, int y) {
+    boolean isSolid (int x, int y) {
         boolean myReturn = true;
 
         if (this.myMap[y][x] > -0.49) {
@@ -213,7 +213,7 @@ public class Game {
     /**
      * Update the Window for the Player to be seen
      */
-    public void adjustGameWindow () {
+    void adjustGameWindow () {
 
         int startX = this.myPlayer.getMyPosX()-1;
 
@@ -297,7 +297,9 @@ public class Game {
         return map;
     }
 
-
+    public double [] [] getMap () {
+        return this.myMap;
+    }
 
 
 

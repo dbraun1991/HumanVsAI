@@ -16,7 +16,6 @@ public class GUI {
 
     private boolean humanPlayer = true;
 
-
     public GUI(int myWidth, int myHeight, boolean human) {
 
         // set properties
@@ -60,9 +59,12 @@ public class GUI {
         // neuron (visualization)
             // paint
 
-
-
     }
+
+    public BufferedImage getSurface() {
+        return mySurface;
+    }
+
 
 
 }

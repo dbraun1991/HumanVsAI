@@ -4,10 +4,12 @@ import com.company.GUI.GUI;
 import com.company.Game.Game;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
-public class Menue {
+class Menue {
 
     // Dimension of window / canvas
     int width = 1800;
@@ -25,7 +27,7 @@ public class Menue {
     Game game;
 
 
-    public Menue (int width, int height) {
+    Menue (int width, int height) {
         this.width = width;
         this.height = height;
 
@@ -41,16 +43,18 @@ public class Menue {
 
     }
 
-    public void operate () {
+    void operate () {
         // call GUI
 
-
+        game = new Game(8,5);
         btnloadGame = new JButton("Load Game");
         btnloadGame.setBounds(20,20,100,40);
         btnloadGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                showCompletePlayground(gui);
+                game.start();
+                double [][] gameMap = game.getMap();
+                showCompletePlayground(gui, gameMap);
                 frame.getContentPane().remove(btnloadGame);
 
                 // Play yourself
@@ -59,7 +63,7 @@ public class Menue {
                 btnHuman.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // do sth
+                        // play myself
                     }
                 });
                 frame.getContentPane().add(btnHuman);
@@ -70,7 +74,7 @@ public class Menue {
                 btnAI.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // do sth
+                        // Show best Calculation
                     }
                 });
                 frame.getContentPane().add(btnAI);
@@ -81,30 +85,62 @@ public class Menue {
                 btnTraining.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // do sth
+                        // train AI
                     }
                 });
                 frame.getContentPane().add(btnTraining);
-
-
                 frame.repaint(100);
             }
         });
         frame.getContentPane().add(btnloadGame);
-
-        // play myself
-
-        // let computer work
     }
 
 
 
-    private void showCompletePlayground (GUI gui) {
+    private void showCompletePlayground (GUI gui, double [][] map) {
+
+        BufferedImage image = gui.getSurface();
+        Graphics g = image.getGraphics();
         // 10 free pixels each side
+
         // TilesWidthNum / Width = pixels/tile in sqrt
-        int tileSide = 190 / (gui.myWidth-20);
+        int tileSide =  (gui.myWidth-20) / (map[0].length);
         // TilesHeightNum * pixels = HeightReduction
-        gui.myHeight = (gui.myHeight) - (8 * tileSide + 20);
+        int newHeight = (gui.myHeight) - ( ((map.length+1) * tileSide) + 50);
+        gui.myHeight = newHeight;
+
+        // show state
+        g.setColor(Color.black);
+        g.drawRect(5,newHeight-15,(tileSide*map[0].length)+10,(tileSide*(map.length+1))+10 );
+        g.fillRect(5,newHeight-15,(tileSide*map[0].length)+10,(tileSide*(map.length+1))+10 );
+        for (int h = 0; h < map.length; h++) {
+            for (int w = 0; w < map[0].length; w++) {
+                System.out.println("h = " + h + " (0-4)    w = " + w + " (0-189)" );
+                /**
+                 *	Empty = -0.5
+                 *	Wall = -0.25
+                 */
+                if (map[h][w] < -0.3) {
+                    // Empty
+                    g.setColor(Color.lightGray);
+                    g.drawRect(10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
+                    g.fillRect(10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
+                    if (h == map.length-1) {
+                        g.drawRect(10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
+                        g.fillRect(10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
+                    }
+                } else {
+                    // Wall & Floor
+                    g.setColor(Color.black);
+                    g.drawRect(10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
+                    g.fillRect(10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
+                    if (h == map.length-1) {
+                        g.drawRect(10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
+                        g.fillRect(10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
+                    }
+                }
+            }
+        }
 
 
 
