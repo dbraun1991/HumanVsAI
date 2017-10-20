@@ -25,6 +25,9 @@ class Menue {
     JButton btnTraining;
     // Instance
     Game game;
+    // Input
+    boolean goUp = false;
+    boolean goRight = false;
 
 
     Menue (int width, int height) {
@@ -68,9 +71,20 @@ class Menue {
                 });
                 frame.getContentPane().add(btnHuman);
 
+                // Training
+                btnTraining = new JButton("train AI");
+                btnTraining.setBounds(220,20,150,40);
+                btnTraining.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        // train AI
+                    }
+                });
+                frame.getContentPane().add(btnTraining);
+
                 // Show best Calculation
                 btnAI = new JButton("show best AI");
-                btnAI.setBounds(220,20,150,40);
+                btnAI.setBounds(420,20,150,40);
                 btnAI.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -79,16 +93,7 @@ class Menue {
                 });
                 frame.getContentPane().add(btnAI);
 
-                // Training
-                btnTraining = new JButton("train AI");
-                btnTraining.setBounds(420,20,150,40);
-                btnTraining.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // train AI
-                    }
-                });
-                frame.getContentPane().add(btnTraining);
+
                 frame.repaint(100);
             }
         });
@@ -115,8 +120,8 @@ class Menue {
         g.fillRect(5,newHeight-15,(tileSide*map[0].length)+10,(tileSide*(map.length+1))+10 );
         for (int h = 0; h < map.length; h++) {
             for (int w = 0; w < map[0].length; w++) {
-                System.out.println("h = " + h + " (0-4)    w = " + w + " (0-189)" );
                 /**
+                 System.out.println("h = " + h + " (0-4)    w = " + w + " (0-189)" );
                  *	Empty = -0.5
                  *	Wall = -0.25
                  */
@@ -126,6 +131,7 @@ class Menue {
                     g.drawRect(10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
                     g.fillRect(10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
                     if (h == map.length-1) {
+                        g.setColor(Color.red);
                         g.drawRect(10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
                         g.fillRect(10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
                     }
@@ -141,10 +147,53 @@ class Menue {
                 }
             }
         }
+    }
 
 
+    /**
+     * Key listener
+     *      w = UP
+     *      d = Right
+     *      enter = ENTER
+     */
+    private void playHuman () {
+
+        // make learning platform visible
 
     }
 
+
+    private void trainAI () {
+
+        // while (time/ repitition is not reached)
+
+            // for all AI in stock
+                // if not played
+                    // play AI (measure)
+
+            // sort all by performance
+
+            // cut out bad
+
+            // create new
+
+        // end training
+
+    }
+
+
+    private void playAI () {
+        // start Game
+
+        // start repeat (while game is running)
+
+            // update Inputs
+
+            // calculate
+
+            // push result
+
+        // end repeat
+    }
 
 }
