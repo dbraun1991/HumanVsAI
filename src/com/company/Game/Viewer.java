@@ -1,5 +1,9 @@
 package com.company.Game;
 
+import com.company.GUI.GUI;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Scanner;
 
 public class Viewer {
@@ -8,12 +12,18 @@ public class Viewer {
     // - - - Variablen - - -
     private double map [] [];
     public Player gPosition;
+    private GUI gui;
+    private int gameX;
+    private int gameY;
     // - - - - - - - - - - -
 
 
-    public Viewer (double newMap [] [], Player position) {
+    public Viewer (double newMap [] [], Player position, GUI gui, int dimX, int dimY) {
         this.map = newMap;
         this.gPosition = position;
+        this.gui = gui;
+        this.gameX = dimX;
+        this.gameY = dimY;
         view(this.gPosition);
     }
 
@@ -45,6 +55,25 @@ public class Viewer {
 
 
     public void view (Player actualPosition) {
+
+        // get Graphics to paint on
+        BufferedImage image = gui.getSurface();
+        Graphics g = image.getGraphics();
+        int sqrPix = 20;
+        int canvasX = (gui.myWidth/2) - (sqrPix *gameX)/2;
+        int canvasY = (gui.myHeight/2) - (sqrPix *gameY)/2;
+
+        // draw
+
+
+
+
+
+
+
+
+
+
 
         System.out.println();
         System.out.println();

@@ -55,10 +55,10 @@ class Menue {
         btnloadGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.start();
+                game.start(gui);
                 double [][] gameMap = game.getMap();
-                showCompletePlayground(gui, gameMap);
                 frame.getContentPane().remove(btnloadGame);
+                showCompletePlayground(gui, gameMap);
 
                 // Play yourself
                 btnHuman = new JButton("Human Player");
@@ -66,7 +66,7 @@ class Menue {
                 btnHuman.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // play myself
+                        playHuman();
                     }
                 });
                 frame.getContentPane().add(btnHuman);
@@ -77,7 +77,7 @@ class Menue {
                 btnTraining.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // train AI
+                        trainAI();
                     }
                 });
                 frame.getContentPane().add(btnTraining);
@@ -88,7 +88,10 @@ class Menue {
                 btnAI.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // Show best Calculation
+                        // represents Pool of AIs
+                        int [] myAiPool = {1};
+                        // shows best out of Pool
+                        playAI(getBestAI(myAiPool));
                     }
                 });
                 frame.getContentPane().add(btnAI);
@@ -106,8 +109,8 @@ class Menue {
 
         BufferedImage image = gui.getSurface();
         Graphics g = image.getGraphics();
-        // 10 free pixels each side
 
+        // 10 free pixels each side
         // TilesWidthNum / Width = pixels/tile in sqrt
         int tileSide =  (gui.myWidth-20) / (map[0].length);
         // TilesHeightNum * pixels = HeightReduction
@@ -159,7 +162,9 @@ class Menue {
     private void playHuman () {
 
         // make learning platform visible
-
+        while ( game.isOpen() ) {
+            game.nextGameState();
+        }
     }
 
 
@@ -182,7 +187,7 @@ class Menue {
     }
 
 
-    private void playAI () {
+    private void playAI (int actualAI) {
         // start Game
 
         // start repeat (while game is running)
@@ -194,6 +199,11 @@ class Menue {
             // push result
 
         // end repeat
+    }
+
+
+    private int getBestAI(int [] thePool) {
+        return thePool[0];
     }
 
 }

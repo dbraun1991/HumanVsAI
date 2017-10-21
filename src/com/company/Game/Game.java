@@ -1,5 +1,7 @@
 package com.company.Game;
 
+import com.company.GUI.GUI;
+
 public class Game {
 
     // - - - Variablen - - -
@@ -38,7 +40,7 @@ public class Game {
     private boolean isRunning;
 
     private Viewer myView;
-
+    private GUI gui;
     // - - - - - - - - - - -
 
 
@@ -260,10 +262,13 @@ public class Game {
 
 
 
-    public void start() {
+    public void start(GUI gui) {
         this.isRunning = true;
+        this.gui = gui;
+        // create default view inclusive Player
         adjustGameWindow();
-        this.myView = new Viewer(this.myMap, this.myPlayer);
+        // create Viewer
+        this.myView = new Viewer(this.myMap, this.myPlayer, gui, this.dimX, this.dimY);
 
         System.out.println(" ");
         System.out.println(" - - - ");
@@ -300,7 +305,5 @@ public class Game {
     public double [] [] getMap () {
         return this.myMap;
     }
-
-
 
 }
