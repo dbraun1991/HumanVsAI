@@ -24,7 +24,6 @@ public class Viewer {
         this.gui = gui;
         this.gameX = dimX;
         this.gameY = dimY;
-        view(this.gPosition);
     }
 
 
@@ -60,41 +59,58 @@ public class Viewer {
         BufferedImage image = gui.getSurface();
         Graphics g = image.getGraphics();
         int sqrPix = 20;
-        int canvasX = (gui.myWidth/2) - (sqrPix *gameX)/2;
-        int canvasY = (gui.myHeight/2) - (sqrPix *gameY)/2;
+
+        int canvasX = (gui.myWidth/2) - (sqrPix*2 *gameX)/2;
+        int canvasY = (gui.myHeight/2) - (sqrPix*2 *gameY)/2;
 
         // draw
-
-
-
-
-
-
-
-
-
-
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-        System.out.println(" ||||||||||||||||||||||||||| ");
-
+        g.setColor(Color.black);
+        g.drawRect(canvasX-5,canvasY-5, (sqrPix*map[0].length)+10,(sqrPix*map.length)+10);
+        g.fillRect(canvasX-5,canvasY-5, (sqrPix*map[0].length)+10,(sqrPix*map.length)+10);
         for (int i0 = 0; i0 < map.length; i0++) {
-            System.out.print(" ||| ");
             for (int i1 = 0; i1 < map[0].length; i1++) {
+                g.setColor(Color.white);	// nothing
+                g.drawRect(canvasX+(sqrPix*i1),canvasY+(sqrPix*i0), sqrPix,sqrPix);
                 if (map[i0][i1] == -0.5) {
-                    System.out.print(" " + " ");	// nothing
+                    g.setColor(Color.lightGray);	// nothing
                 } else if (map[i0][i1] == -0.25) {
-                    System.out.print("X" + " ");	// wall
+                    g.setColor(Color.black);	        // wall
                 } else if (map[i0][i1] == 0.0) {
-                    System.out.print("O" + " ");	// wall
+                    g.setColor(Color.blue);	    // person
                 }
+                g.fillRect(canvasX+(sqrPix*i1)+1,canvasY+(sqrPix*i0)+1, sqrPix-1,sqrPix-1);
             }
-            System.out.println();
         }
-        System.out.println(" ||||||||||||||||||||||||||| ");
+
+
+/**
+ *
+ System.out.println();
+ System.out.println();
+ System.out.println();
+ System.out.println(" ||||||||||||||||||||||||||| ");
+
+ for (int i0 = 0; i0 < map.length; i0++) {
+ System.out.print(" ||| ");
+ for (int i1 = 0; i1 < map[0].length; i1++) {
+ if (map[i0][i1] == -0.5) {
+ System.out.print(" " + " ");	// nothing
+ } else if (map[i0][i1] == -0.25) {
+ System.out.print("X" + " ");	// wall
+ } else if (map[i0][i1] == 0.0) {
+ System.out.print("O" + " ");	// wall
+ }
+ }
+ System.out.println();
+ }
+ System.out.println(" ||||||||||||||||||||||||||| ");
+
+ *
+ */
+
         System.out.println(" Your Position:   X: " + actualPosition.getMyPosX() + "    Y: " + actualPosition.getMyPosY() );
+
+
     }
 
 
