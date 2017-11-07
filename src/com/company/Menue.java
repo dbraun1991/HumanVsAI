@@ -7,13 +7,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 
-class Menue {
+class Menue implements KeyListener {
 
+    // given Properties
     // Dimension of window / canvas
     int width = 1800;
     int height = 1000;
+
+    // Visible Components
     // GUI
     GUI gui;
     // Window
@@ -23,8 +28,19 @@ class Menue {
     JButton btnHuman;
     JButton btnAI;
     JButton btnTraining;
-    // Instance
+    // Label
+    JLabel lblScore;        // shows actual score
+    JLabel lblEnter;        // information to hit ENTER for move
+    // Checkbox
+    JCheckBox chkUP;
+    JCheckBox chkRIHGT;
+    // Instances
+    // Game
     Game game;
+
+    // AI
+    // ... ... ...
+
     // Input
     boolean goUp = false;
     boolean goRight = false;
@@ -40,9 +56,11 @@ class Menue {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(gui.myView);
         frame.pack();
-        frame.setLocationByPlatform(true);
+        frame.setLocation(10,10);
         frame.setVisible(true);
         frame.repaint(100);
+
+
 
     }
 
@@ -65,9 +83,7 @@ class Menue {
                 btnHuman.setBounds(20,20,150,40);
                 btnHuman.addActionListener(new ActionListener() {
                     @Override
-                    public void actionPerformed(ActionEvent e) {
-                        playHuman();
-                    }
+                    public void actionPerformed(ActionEvent e) { playHuman(); }
                 });
                 frame.getContentPane().add(btnHuman);
 
@@ -161,10 +177,55 @@ class Menue {
      */
     private void playHuman () {
 
-        // make learning platform visible
-        while ( game.isOpen() ) {
-            game.nextGameState();
-        }
+        // remove buttons
+        frame.getContentPane().remove(btnHuman);
+        frame.getContentPane().remove(btnAI);
+        frame.getContentPane().remove(btnTraining);
+
+        // add components
+        // score
+        lblScore = new JLabel("Score :   " + game.playersFitness(), SwingConstants.CENTER);
+        lblScore.setBounds(20,20,250,40);
+        lblScore.setFont(new Font(lblScore.getFont().getName(),Font.PLAIN, 20));
+        lblScore.setForeground(Color.white);
+        lblScore.setBackground(Color.lightGray);
+        lblScore.setVisible(true);
+        frame.getContentPane().add(lblScore);
+        // Label for Enter
+        lblEnter = new JLabel("Press  ENTER  when ready.", SwingConstants.CENTER);
+        lblEnter.setBounds(650,20,250,40);
+        lblEnter.setFont(new Font(lblEnter.getFont().getName(),Font.PLAIN, 20));
+        lblEnter.setForeground(Color.white);
+        lblEnter.setBackground(Color.lightGray);
+        lblEnter.setVisible(true);
+        frame.getContentPane().add(lblEnter);
+
+        // checkBox
+        // UP
+        chkUP = new JCheckBox("Jump  (w)",false);
+        chkUP.setBounds(500,15,100,25);
+        chkUP.setForeground(Color.darkGray);
+        chkUP.setBackground(Color.lightGray);
+        chkUP.setVisible(true);
+        frame.getContentPane().add(chkUP);
+        // RIGHT
+        chkRIHGT = new JCheckBox("Right   (d)", false);
+        chkRIHGT.setBounds(500,45,100,25);
+        chkRIHGT.setForeground(Color.darkGray);
+        chkRIHGT.setBackground(Color.lightGray);
+        chkRIHGT.setVisible(true);
+        frame.getContentPane().add(chkRIHGT);
+
+        // Keylistener
+        frame.addKeyListener(this);
+
+
+        frame.repaint(100);
+
+        // make learning platform visible (play game)
+        //while ( game.isOpen() ) {
+          //  game.nextGameState();
+        //}
     }
 
 
@@ -201,9 +262,43 @@ class Menue {
         // end repeat
     }
 
-
     private int getBestAI(int [] thePool) {
         return thePool[0];
+    }
+
+
+
+    public void keyPressed(KeyEvent e) {
+        System.out.println("--- keyPressed ---");
+        System.out.println("Taste: " + e.getKeyChar() + ", Code: " + e.getKeyCode());
+        System.out.println("Tastenposition: " + e.getKeyLocation());
+        System.out.println("---");
+    }
+
+    public void keyReleased(KeyEvent e) {
+        System.out.println("--- KeyReleased ---");
+        /**
+         System.out.println("KeyReleased: ");
+        if(e.getKeyCode() == KeyEvent.VK_SPACE){
+            System.out.println("Programmabbruch!");
+            System.exit(0);
+        }
+        System.out.println("Taste: " + e.getKeyChar() + ", Code: " + e.getKeyCode());
+        System.out.println("---");
+         */
+    }
+
+    public void keyTyped(KeyEvent e) {
+        System.out.println("--- keyTyped ---");
+        /**
+        System.out.println("KeyTyped: ");
+        if(e.getKeyChar() == KeyEvent.CHAR_UNDEFINED){
+            System.out.println("Kein Unicode-Character gedr\u00FCckt!");
+        }else{
+            System.out.println(e.getKeyChar() + " gedr\u00FCckt!");
+        }
+        System.out.println("---");
+        */
     }
 
 }
