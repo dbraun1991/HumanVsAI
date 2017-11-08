@@ -65,14 +65,18 @@ public class Viewer {
 
         // delete old
         g.setColor(Color.darkGray);
-        g.drawRect(canvasX-5,canvasY-50, (sqrPix*map[0].length)+10,(sqrPix*map.length)+150);
-        g.fillRect(canvasX-5,canvasY-50, (sqrPix*map[0].length)+10,(sqrPix*map.length)+150);
+        g.drawRect(canvasX-15,canvasY-15, (sqrPix*map[0].length)+10,(sqrPix*map.length)+30);
+        g.fillRect(canvasX-15,canvasY-15, (sqrPix*map[0].length)+10,(sqrPix*map.length)+30);
 
         // draw
         g.setColor(Color.black);
         g.drawRect(canvasX-5,canvasY-5, (sqrPix*map[0].length)+10,(sqrPix*map.length)+10);
         g.fillRect(canvasX-5,canvasY-5, (sqrPix*map[0].length)+10,(sqrPix*map.length)+10);
         for (int i0 = 0; i0 < map.length; i0++) {
+            boolean lastRow = false;
+            if (i0 == map.length-1) {
+                lastRow = true;
+            }
             for (int i1 = 0; i1 < map[0].length; i1++) {
                 g.setColor(Color.white);	// nothing
                 g.drawRect(canvasX+(sqrPix*i1),canvasY+(sqrPix*i0), sqrPix,sqrPix);
@@ -84,6 +88,10 @@ public class Viewer {
                     g.setColor(Color.blue);	    // person
                 }
                 g.fillRect(canvasX+(sqrPix*i1)+1,canvasY+(sqrPix*i0)+1, sqrPix-1,sqrPix-1);
+                if (lastRow && g.getColor()==Color.lightGray) {
+                    g.setColor(Color.red);
+                    g.fillRect(canvasX+(sqrPix*i1)+1,canvasY+(sqrPix*i0)+(sqrPix/2)+1, sqrPix-1,(sqrPix/2)-1);
+                }
             }
         }
 

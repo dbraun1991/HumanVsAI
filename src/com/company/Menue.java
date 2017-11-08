@@ -31,6 +31,8 @@ class Menue implements KeyListener {
     // Label
     JLabel lblScore;        // shows actual score
     JLabel lblEnter;        // information to hit ENTER for move
+    // Textbox
+    JTextField txtScore;
     // Checkbox
     JCheckBox chkUP;
     JCheckBox chkRIHGT;
@@ -131,7 +133,6 @@ class Menue implements KeyListener {
         int tileSide =  (gui.myWidth-20) / (map[0].length);
         // TilesHeightNum * pixels = HeightReduction
         int newHeight = (gui.myHeight) - ( ((map.length+1) * tileSide) + 50);
-        gui.myHeight = newHeight;
 
         // show state
         g.setColor(Color.black);
@@ -183,15 +184,16 @@ class Menue implements KeyListener {
         frame.getContentPane().remove(btnTraining);
 
         // add components
-        // score
-        lblScore = new JLabel("Score :   " + game.playersFitness(), SwingConstants.CENTER);
-        lblScore.setBounds(20,20,250,40);
+        // Labels
+        // ... for Score
+        lblScore = new JLabel("Score :   ", SwingConstants.CENTER);
+        lblScore.setBounds(20,20,130,40);
         lblScore.setFont(new Font(lblScore.getFont().getName(),Font.PLAIN, 20));
         lblScore.setForeground(Color.white);
         lblScore.setBackground(Color.lightGray);
         lblScore.setVisible(true);
         frame.getContentPane().add(lblScore);
-        // Label for Enter
+        // ... for Enter
         lblEnter = new JLabel("Press  ENTER  when ready.", SwingConstants.CENTER);
         lblEnter.setBounds(650,20,250,40);
         lblEnter.setFont(new Font(lblEnter.getFont().getName(),Font.PLAIN, 20));
@@ -199,7 +201,16 @@ class Menue implements KeyListener {
         lblEnter.setBackground(Color.lightGray);
         lblEnter.setVisible(true);
         frame.getContentPane().add(lblEnter);
-
+        // Textfield
+        // ... for Score
+        txtScore = new JTextField(""+game.playersFitness(),1);
+        txtScore.setBounds(170,20,50,40);
+        txtScore.setFont(new Font(lblEnter.getFont().getName(),Font.PLAIN, 20));
+        txtScore.setForeground(Color.white);
+        txtScore.setBackground(Color.darkGray);
+        txtScore.setFocusable(true);
+        txtScore.setVisible(true);
+        frame.getContentPane().add(txtScore);
         // checkBox
         // UP
         chkUP = new JCheckBox("Jump  (w)",false);
@@ -217,8 +228,8 @@ class Menue implements KeyListener {
         frame.getContentPane().add(chkRIHGT);
 
         // Keylistener
-        frame.addKeyListener(this);
-
+        txtScore.addKeyListener(this);
+        txtScore.requestFocus();
 
         frame.repaint(100);
 
@@ -269,36 +280,85 @@ class Menue implements KeyListener {
 
 
     public void keyPressed(KeyEvent e) {
-        System.out.println("--- keyPressed ---");
-        System.out.println("Taste: " + e.getKeyChar() + ", Code: " + e.getKeyCode());
-        System.out.println("Tastenposition: " + e.getKeyLocation());
-        System.out.println("---");
+        // System.out.println("- keyPressed -");
+
+        // reset gui
+        txtScore.setText(""+game.playersFitness());
+        txtScore.requestFocus();
     }
+
+
 
     public void keyReleased(KeyEvent e) {
-        System.out.println("--- KeyReleased ---");
-        /**
-         System.out.println("KeyReleased: ");
-        if(e.getKeyCode() == KeyEvent.VK_SPACE){
-            System.out.println("Programmabbruch!");
-            System.exit(0);
+        System.out.println("- - - - - - KeyReleased - - - - - - ");
+        if (game.isOpen()) {
+            if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                // Create inputField
+                double [] newInputs = new double [2] ;
+                // Calculate values
+                if (chkRIHGT.isSelected()){
+                    newInputs[0] = 0.9;
+                } else {
+                    newInputs[0] = 0.0;
+                }
+                if (chkUP.isSelected()){
+                    newInputs[1] = 0.9;
+                } else {
+                    newInputs[1] = 0.0;
+                }
+
+                System.out.println("... ENTER ...  Right = " + newInputs[0] + "   Up = " + newInputs[1]);
+
+                // send to Game
+                game.nextGameState(newInputs);
+                frame.repaint(100);
+
+                // reset checkboxes
+                chkUP.setSelected(false);
+                chkRIHGT.setSelected(false);
+
+            } else if (e.getKeyCode() == KeyEvent.VK_W){
+                if (chkUP.isSelected()) {
+                    chkUP.setSelected(false);
+                } else {
+                    chkUP.setSelected(true);
+                }
+            } else if (e.getKeyCode() == KeyEvent.VK_J){
+                if (chkUP.isSelected()) {
+                    chkUP.setSelected(false);
+                } else {
+                    chkUP.setSelected(true);
+                }
+            } else if (e.getKeyCode() == KeyEvent.VK_D){
+                if (chkRIHGT.isSelected()) {
+                    chkRIHGT.setSelected(false);
+                } else {
+                    chkRIHGT.setSelected(true);
+                }
+            } else if (e.getKeyCode() == KeyEvent.VK_R){
+                if (chkRIHGT.isSelected()) {
+                    chkRIHGT.setSelected(false);
+                } else {
+                    chkRIHGT.setSelected(true);
+                }
+            }
         }
-        System.out.println("Taste: " + e.getKeyChar() + ", Code: " + e.getKeyCode());
-        System.out.println("---");
-         */
+
+        System.out.println("Taste:  " + e.getKeyChar() + " , Code:  " + e.getKeyCode());
+        System.out.println("");
+        // reset gui
+        txtScore.setText(""+game.playersFitness());
+        txtScore.requestFocus();
     }
 
+
+
     public void keyTyped(KeyEvent e) {
-        System.out.println("--- keyTyped ---");
-        /**
-        System.out.println("KeyTyped: ");
-        if(e.getKeyChar() == KeyEvent.CHAR_UNDEFINED){
-            System.out.println("Kein Unicode-Character gedr\u00FCckt!");
-        }else{
-            System.out.println(e.getKeyChar() + " gedr\u00FCckt!");
-        }
-        System.out.println("---");
-        */
+        // System.out.println("----- keyTyped -----");
+
+        // reset gui
+        txtScore.setText(""+game.playersFitness());
+        txtScore.requestFocus();
     }
 
 }

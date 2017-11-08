@@ -62,23 +62,7 @@ public class Game {
         this.noMoveRight = 0;
 
         this.mapExtender = new MapParts();
-        this.myMap = mapExtender.appendTile(myMap, 12-1);
-
-        /**
-         this.myMap = mapExtender.appendTile(myMap, 0);
-         this.myMap = mapExtender.appendTile(myMap, 1);
-         this.myMap = mapExtender.appendTile(myMap, 2);
-         this.myMap = mapExtender.appendTile(myMap, 3);
-         this.myMap = mapExtender.appendTile(myMap, 4);
-         this.myMap = mapExtender.appendTile(myMap, 5);
-         this.myMap = mapExtender.appendTile(myMap, 6);
-         this.myMap = mapExtender.appendTile(myMap, 7);
-         this.myMap = mapExtender.appendTile(myMap, 8);
-         this.myMap = mapExtender.appendTile(myMap, 9);
-         this.myMap = mapExtender.appendTile(myMap, 10);
-         /**
-         *
-         */
+        this.myMap = mapExtender.appendTile(myMap, 12-1);       // get Map
 
         System.out.println( "Length :" );
         System.out.println( myMap[0].length );
@@ -89,7 +73,7 @@ public class Game {
 
 
 
-    void giveInput (double [] inputs) {
+    public void giveInput (double [] inputs) {
         this.newInputs = inputs;
         if (this.isRunning) {
             computeInputs(this.newInputs);
@@ -251,7 +235,7 @@ public class Game {
 
 
     public int playersFitness () {
-        return this.myPlayer.getMyPosX();
+        return this.myPlayer.getMyPosX()-2;
     }
 
 
@@ -282,10 +266,10 @@ public class Game {
 
 
 
-    public void nextGameState () {
-        myView.view(this.myPlayer);
-        giveInput(myView.getInput());
-        myView.setNewMap(myGameWindow);
+    public void nextGameState (double [] inputs) {
+        giveInput(inputs);              // compute inputs
+        myView.setNewMap(myGameWindow);	// compute new GameWindow
+        showGameState();                // paint actual situation
     }
 
 
