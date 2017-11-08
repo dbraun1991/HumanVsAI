@@ -61,7 +61,12 @@ public class Viewer {
         int sqrPix = 20;
 
         int canvasX = (gui.myWidth/2) - (sqrPix*2 *gameX)/2;
-        int canvasY = (gui.myHeight/2) - (sqrPix*2 *gameY)/2;
+        int canvasY = (gui.myHeight/5*4) - (sqrPix*2 *gameY)/2;
+
+        // delete old
+        g.setColor(Color.darkGray);
+        g.drawRect(canvasX-5,canvasY-50, (sqrPix*map[0].length)+10,(sqrPix*map.length)+150);
+        g.fillRect(canvasX-5,canvasY-50, (sqrPix*map[0].length)+10,(sqrPix*map.length)+150);
 
         // draw
         g.setColor(Color.black);
@@ -82,34 +87,7 @@ public class Viewer {
             }
         }
 
-
-/**
- *
- System.out.println();
- System.out.println();
- System.out.println();
- System.out.println(" ||||||||||||||||||||||||||| ");
-
- for (int i0 = 0; i0 < map.length; i0++) {
- System.out.print(" ||| ");
- for (int i1 = 0; i1 < map[0].length; i1++) {
- if (map[i0][i1] == -0.5) {
- System.out.print(" " + " ");	// nothing
- } else if (map[i0][i1] == -0.25) {
- System.out.print("X" + " ");	// wall
- } else if (map[i0][i1] == 0.0) {
- System.out.print("O" + " ");	// wall
- }
- }
- System.out.println();
- }
- System.out.println(" ||||||||||||||||||||||||||| ");
-
- *
- */
-
         System.out.println(" Your Position:   X: " + actualPosition.getMyPosX() + "    Y: " + actualPosition.getMyPosY() );
-
 
     }
 
