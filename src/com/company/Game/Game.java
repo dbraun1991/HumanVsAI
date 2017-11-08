@@ -142,8 +142,15 @@ public class Game {
 
                     // End of Game
                     if (this.myPlayer.getMyPosY() == 4) {
+                        // Lava or similar
+                        this.myPlayer.setMyPosY(this.myPlayer.getMyPosY()+1);
+                        // End of Game
                         this.isRunning = false;
+                        System.out.println("");
+                        System.out.println(" - - - - - ");
                         System.out.println(" Game Over ");
+                        System.out.println(" - - - - - ");
+                        System.out.println("");
                     }
                 }
             }

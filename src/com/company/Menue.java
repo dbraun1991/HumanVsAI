@@ -28,9 +28,11 @@ class Menue implements KeyListener {
     JButton btnHuman;
     JButton btnAI;
     JButton btnTraining;
+    JButton btnMenue;
     // Label
     JLabel lblScore;        // shows actual score
     JLabel lblEnter;        // information to hit ENTER for move
+    JLabel lblResult;       // Result
     // Textbox
     JTextField txtScore;
     // Checkbox
@@ -72,6 +74,7 @@ class Menue implements KeyListener {
         game = new Game(8,5);
         btnloadGame = new JButton("Load Game");
         btnloadGame.setBounds(20,20,100,40);
+        btnloadGame.requestFocus();
         btnloadGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -80,14 +83,19 @@ class Menue implements KeyListener {
                 frame.getContentPane().remove(btnloadGame);
                 showCompletePlayground(gui, gameMap);
 
+                // - - - - - - - - - - - -
+
                 // Play yourself
                 btnHuman = new JButton("Human Player");
                 btnHuman.setBounds(20,20,150,40);
+                btnHuman.requestFocus();
                 btnHuman.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) { playHuman(); }
                 });
                 frame.getContentPane().add(btnHuman);
+
+                // - - - - - - - - - - - -
 
                 // Training
                 btnTraining = new JButton("train AI");
@@ -99,6 +107,8 @@ class Menue implements KeyListener {
                     }
                 });
                 frame.getContentPane().add(btnTraining);
+
+                // - - - - - - - - - - - -
 
                 // Show best Calculation
                 btnAI = new JButton("show best AI");
@@ -114,6 +124,18 @@ class Menue implements KeyListener {
                 });
                 frame.getContentPane().add(btnAI);
 
+                // - - - - - - - - - - - -
+
+                // Show best Calculation
+                btnMenue = new JButton("Menue (Esc)");
+                btnMenue.setBounds(width-200,20,150,40);
+                btnMenue.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) { showMenue(); }
+                });
+                frame.getContentPane().add(btnMenue);
+
+                // - - - - - - - - - - - -
 
                 frame.repaint(100);
             }
@@ -130,14 +152,15 @@ class Menue implements KeyListener {
 
         // 10 free pixels each side
         // TilesWidthNum / Width = pixels/tile in sqrt
-        int tileSide =  (gui.myWidth-20) / (map[0].length);
+        int tileSide =  (gui.myWidth-10) / (map[0].length);
+        int bias = (( (gui.myWidth-10)%(tileSide*map[0].length) )/2)-5;
         // TilesHeightNum * pixels = HeightReduction
         int newHeight = (gui.myHeight) - ( ((map.length+1) * tileSide) + 50);
 
         // show state
         g.setColor(Color.black);
-        g.drawRect(5,newHeight-15,(tileSide*map[0].length)+10,(tileSide*(map.length+1))+10 );
-        g.fillRect(5,newHeight-15,(tileSide*map[0].length)+10,(tileSide*(map.length+1))+10 );
+        g.drawRect(bias+5,newHeight-15,(tileSide*map[0].length)+10,(tileSide*(map.length+1))+10 );
+        g.fillRect(bias+5,newHeight-15,(tileSide*map[0].length)+10,(tileSide*(map.length+1))+10 );
         for (int h = 0; h < map.length; h++) {
             for (int w = 0; w < map[0].length; w++) {
                 /**
@@ -148,21 +171,21 @@ class Menue implements KeyListener {
                 if (map[h][w] < -0.3) {
                     // Empty
                     g.setColor(Color.lightGray);
-                    g.drawRect(10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
-                    g.fillRect(10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
+                    g.drawRect(bias+10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
+                    g.fillRect(bias+10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
                     if (h == map.length-1) {
                         g.setColor(Color.red);
-                        g.drawRect(10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
-                        g.fillRect(10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
+                        g.drawRect(bias+10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
+                        g.fillRect(bias+10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
                     }
                 } else {
                     // Wall & Floor
                     g.setColor(Color.black);
-                    g.drawRect(10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
-                    g.fillRect(10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
+                    g.drawRect(bias+10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
+                    g.fillRect(bias+10+tileSide*w,newHeight-10+tileSide*h,tileSide,tileSide);
                     if (h == map.length-1) {
-                        g.drawRect(10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
-                        g.fillRect(10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
+                        g.drawRect(bias+10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
+                        g.fillRect(bias+10+tileSide*w,newHeight-10+tileSide*(h+1),tileSide,tileSide);
                     }
                 }
             }
@@ -233,10 +256,7 @@ class Menue implements KeyListener {
 
         frame.repaint(100);
 
-        // make learning platform visible (play game)
-        //while ( game.isOpen() ) {
-          //  game.nextGameState();
-        //}
+        // game open for input (key listener)
     }
 
 
@@ -273,8 +293,39 @@ class Menue implements KeyListener {
         // end repeat
     }
 
+
     private int getBestAI(int [] thePool) {
         return thePool[0];
+    }
+
+
+    private void showMenue () {
+        // clear GUI
+        frame.getContentPane().removeAll();
+        // reset objects
+        game = null;
+        // Buttons
+        btnloadGame = null;
+        btnHuman = null;
+        btnAI = null;
+        btnTraining = null;
+        btnMenue = null;
+        // Label
+        lblScore = null;
+        lblEnter = null;
+        lblResult = null;
+        // Textbox
+        txtScore = null;
+        // Checkbox
+        chkUP = null;
+        chkRIHGT = null;
+        // Clear gui
+        gui.UpdateGui();
+        // - - - - -
+        // restart
+        operate();
+
+        frame.repaint(100);
     }
 
 
@@ -342,9 +393,26 @@ class Menue implements KeyListener {
                     chkRIHGT.setSelected(true);
                 }
             }
+        } else {
+            game.showGameState();
+            // txtScore.removeKeyListener(this);
+            // Labels
+            // ... for Result
+            lblResult = new JLabel("Final score :   " + game.playersFitness(), SwingConstants.CENTER);
+            lblResult.setBounds(50,height-200,300,40);
+            lblResult.setFont(new Font(lblScore.getFont().getName(),Font.PLAIN, 20));
+            lblResult.setForeground(Color.red);
+            lblResult.setBackground(Color.darkGray);
+            lblResult.setVisible(true);
+            lblResult.requestFocus();
+            frame.getContentPane().add(lblResult);
+
+            frame.repaint(100);
+
         }
 
         System.out.println("Taste:  " + e.getKeyChar() + " , Code:  " + e.getKeyCode());
+        System.out.println("");
         System.out.println("");
         // reset gui
         txtScore.setText(""+game.playersFitness());

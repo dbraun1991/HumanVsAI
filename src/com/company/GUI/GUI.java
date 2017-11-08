@@ -46,19 +46,6 @@ public class GUI {
         // background
         g.setColor(Color.darkGray);
         g.fillRect(0,0, this.myWidth, this.myHeight);
-
-        // playground (whole)
-
-
-
-        // playground (in game)
-            // depends on game state
-
-
-
-        // neuron (visualization)
-            // paint
-
     }
 
     public BufferedImage getSurface() {
