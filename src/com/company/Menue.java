@@ -15,39 +15,43 @@ class Menue implements KeyListener {
 
     // given Properties
     // Dimension of window / canvas
-    int width = 1800;
-    int height = 1000;
+    private int width = 1800;
+    private int height = 1000;
 
     // Visible Components
     // GUI
-    GUI gui;
+    private GUI gui;
     // Window
-    JFrame frame;
+    private JFrame frame;
     // Buttons
-    JButton btnloadGame;
-    JButton btnHuman;
-    JButton btnAI;
-    JButton btnTraining;
-    JButton btnMenue;
+    private JButton btnLoadGame;    // load game
+    private JButton btnHuman;       // human player
+    private JButton btnAI;          // ai player
+    private JButton btnTraining;    //
+    private JButton btnMenue;       // back to start
+    private JButton btnLoadAI;      // load AI from file
+    private JButton btnNewAI;       // calculate new AI pool
+    private JButton btnShowAllAI;   // show all AI in pool (structure only)
+    private JButton btnRunBestAI;   // show best AI
+    private JButton btnSaveAI;      // save AI to file
     // Label
-    JLabel lblScore;        // shows actual score
-    JLabel lblEnter;        // information to hit ENTER for move
-    JLabel lblResult;       // Result
+    private JLabel lblScore;        // shows actual score
+    private JLabel lblEnter;        // information to hit ENTER for move
+    private JLabel lblResult;       // Result
+    private JLabel lblAISettings;   // Session-settings
+    private JLabel lblAIProperties; // Properties of specific AI
+
     // Textbox
-    JTextField txtScore;
-    // Checkbox
-    JCheckBox chkUP;
-    JCheckBox chkRIHGT;
+    private JTextField txtScore;
+    // Checkbox (Input)
+    private JCheckBox chkUP;
+    private JCheckBox chkRIHGT;
     // Instances
     // Game
-    Game game;
+    private Game game;
 
     // AI
     // ... ... ...
-
-    // Input
-    boolean goUp = false;
-    boolean goRight = false;
 
 
     Menue (int width, int height) {
@@ -72,22 +76,22 @@ class Menue implements KeyListener {
         // call GUI
 
         game = new Game(8,5);
-        btnloadGame = new JButton("Load Game");
-        btnloadGame.setBounds(20,20,100,40);
-        btnloadGame.requestFocus();
-        btnloadGame.addActionListener(new ActionListener() {
+        btnLoadGame = new JButton("Load Game");
+        btnLoadGame.setBounds(20,20,100,40);
+        btnLoadGame.requestFocus();
+        btnLoadGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 game.start(gui);
                 double [][] gameMap = game.getMap();
-                frame.getContentPane().remove(btnloadGame);
+                frame.getContentPane().remove(btnLoadGame);
                 showCompletePlayground(gui, gameMap);
 
                 // - - - - - - - - - - - -
 
                 // Play yourself
                 btnHuman = new JButton("Human Player");
-                btnHuman.setBounds(20,20,150,40);
+                btnHuman.setBounds(220,20,150,40);
                 btnHuman.requestFocus();
                 btnHuman.addActionListener(new ActionListener() {
                     @Override
@@ -98,31 +102,15 @@ class Menue implements KeyListener {
                 // - - - - - - - - - - - -
 
                 // Training
-                btnTraining = new JButton("train AI");
-                btnTraining.setBounds(220,20,150,40);
+                btnTraining = new JButton("Compute AI");
+                btnTraining.setBounds(420,20,150,40);
                 btnTraining.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        trainAI();
+                        AIworkout();
                     }
                 });
                 frame.getContentPane().add(btnTraining);
-
-                // - - - - - - - - - - - -
-
-                // Show best Calculation
-                btnAI = new JButton("show best AI");
-                btnAI.setBounds(420,20,150,40);
-                btnAI.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        // represents Pool of AIs
-                        int [] myAiPool = {1};
-                        // shows best out of Pool
-                        playAI(getBestAI(myAiPool));
-                    }
-                });
-                frame.getContentPane().add(btnAI);
 
                 // - - - - - - - - - - - -
 
@@ -140,7 +128,7 @@ class Menue implements KeyListener {
                 frame.repaint(100);
             }
         });
-        frame.getContentPane().add(btnloadGame);
+        frame.getContentPane().add(btnLoadGame);
     }
 
 
@@ -203,7 +191,6 @@ class Menue implements KeyListener {
 
         // remove buttons
         frame.getContentPane().remove(btnHuman);
-        frame.getContentPane().remove(btnAI);
         frame.getContentPane().remove(btnTraining);
 
         // add components
@@ -260,7 +247,94 @@ class Menue implements KeyListener {
     }
 
 
-    private void trainAI () {
+    private void AIworkout () {
+
+        // remove buttons
+        frame.getContentPane().remove(btnHuman);
+        frame.getContentPane().remove(btnTraining);
+
+        // ... AI ...
+        // New
+        btnNewAI = new JButton("New AI");
+        btnNewAI.setBounds(220,20,150,40);
+        btnNewAI.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) { }
+        });
+        frame.getContentPane().add(btnNewAI);
+
+        // - - - - - - - - - - - -
+
+        // Load
+        btnLoadAI = new JButton("Load AI");
+        btnLoadAI.setBounds(420,20,150,40);
+        btnLoadAI.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) { }
+        });
+        frame.getContentPane().add(btnLoadAI);
+
+        // - - - - - - - - - - - -
+
+        // Show best Calculations
+        btnShowAllAI = new JButton("Show Pool");
+        btnShowAllAI.setEnabled(false);
+        btnShowAllAI.setBounds(620,20,150,40);
+        btnShowAllAI.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        frame.getContentPane().add(btnShowAllAI);
+
+        // - - - - - - - - - - - -
+
+        // Show best Calculations
+        btnRunBestAI = new JButton("Run Best");
+        btnRunBestAI.setEnabled(false);
+        btnRunBestAI.setBounds(620,20,150,40);
+        btnRunBestAI.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            }
+        });
+        frame.getContentPane().add(btnRunBestAI);
+
+        // - - - - - - - - - - - -
+
+        // New
+        btnSaveAI = new JButton("Save AI");
+        btnSaveAI.setEnabled(false);
+        btnSaveAI.setBounds(820,20,150,40);
+        btnSaveAI.requestFocus();
+        btnSaveAI.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) { saveAI(); }
+        });
+        frame.getContentPane().add(btnSaveAI);
+
+        // - - - - - - - - - - - -
+        gui.pntAIArea();
+        // - - - - - - - - - - - -
+        // Labels
+        lblAISettings = new JLabel("Setting", SwingConstants.CENTER);
+        lblAISettings.setBounds(20,150,130,40);
+        lblAISettings.setFont(new Font(lblAISettings.getFont().getName(),Font.PLAIN, 20));
+        lblAISettings.setForeground(Color.white);
+        lblAISettings.setBackground(Color.lightGray);
+        lblAISettings.setVisible(true);
+        frame.getContentPane().add(lblAISettings);
+        // - - - - - - - - - - - -
+        lblAIProperties = new JLabel("AI Properties", SwingConstants.CENTER);
+        lblAIProperties.setBounds(width-200,150,130,40);
+        lblAIProperties.setFont(new Font(lblAIProperties.getFont().getName(),Font.PLAIN, 20));
+        lblAIProperties.setForeground(Color.white);
+        lblAIProperties.setBackground(Color.lightGray);
+        lblAIProperties.setVisible(true);
+        frame.getContentPane().add(lblAIProperties);
+        // - - - - - - - - - - - -
+        frame.repaint(100);
+
 
         // while (time/ repitition is not reached)
 
@@ -294,9 +368,29 @@ class Menue implements KeyListener {
     }
 
 
+
     private int getBestAI(int [] thePool) {
         return thePool[0];
     }
+
+
+
+    private void loadAI() {
+        // toDooo;
+    }
+
+
+
+    private void computeNewAI() {
+        // toDooo;
+    }
+
+
+
+    private void saveAI() {
+        // toDooo;
+    }
+
 
 
     private void showMenue () {
@@ -305,11 +399,14 @@ class Menue implements KeyListener {
         // reset objects
         game = null;
         // Buttons
-        btnloadGame = null;
+        btnLoadGame = null;
         btnHuman = null;
         btnAI = null;
         btnTraining = null;
         btnMenue = null;
+        btnLoadAI = null;
+        btnNewAI = null;
+        btnSaveAI = null;
         // Label
         lblScore = null;
         lblEnter = null;
