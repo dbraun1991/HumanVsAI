@@ -266,6 +266,25 @@ public class Genom implements Comparable <Genom> {
     }
 
 
+    public int size() {
+        return this.myGenes.size();
+    }
+
+    public Gene getGene (int index) {
+        return this.myGenes.get(index);
+    }
+
+    public int getlayerDepth () {
+        int max = 0;
+        for (Gene g : myGenes) {
+            if (g.getlayerDepth() > max) {
+                max = g.getlayerDepth();
+            }
+        }
+        return max;
+    }
+
+
 
     public Genom getCopy () {
         Genom myCopy = new Genom();

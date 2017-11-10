@@ -58,10 +58,10 @@ public class Viewer {
         // get Graphics to paint on
         BufferedImage image = gui.getSurface();
         Graphics g = image.getGraphics();
-        int sqrPix = 20;
+        int sqrPix = 21;
 
-        int canvasX = (gui.myWidth/2) - (sqrPix*2 *gameX)/2;
-        int canvasY = (gui.myHeight/5*4) - (sqrPix*2 *gameY)/2;
+        int canvasX = (gui.myWidth/2) - (sqrPix * gameX)/2;
+        int canvasY = (int)(gui.myHeight*0.75) - (sqrPix * gameY)/2;
 
         // delete old
         g.setColor(Color.darkGray);

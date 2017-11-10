@@ -39,16 +39,15 @@ public class Pool {
      * @param maxNumberOfNodes
      * @param maxDepthInLayers
      */
-    public Pool (int maxNumberOfSpecies, int numberOfInputs, int numberOfOutputs, int maxNumberOfNodes, int maxDepthInLayers) {
+    public Pool (int maxNumberOfSpecies, int numberOfInputs, int numberOfOutputs, int maxNumberOfNodes, int maxDepthInLayers, boolean createNew) {
 
-        boolean createNew = false;	// false = read from file ... true = create new instances
         this.Incoming = new LinkedList <Neuron>();
 
         // list to give the inputs
         this.input = new Neuron [numberOfInputs] ;
         for (int i=0 ; i<input.length; i++) {
             input [i] = new Neuron();
-            input[i].setlayer(0);
+            input[i].setlayer(-1);
             this.Incoming.add(input[i]);
         }
         // list to give the outputs
@@ -63,13 +62,14 @@ public class Pool {
         // Number of Outputs of each Species in Pool (fixed Maximum)
         if (numberOfOutputs > 0  &&  numberOfOutputs < 1000) {
             this.maxOutputs = numberOfOutputs;
+            this.output=numberOfOutputs;
         } else {
             this.maxOutputs = 300;
             System.out.println("Warning - maximum Output nodes were set to  ( default = 300 ) ");
         }
 
         // Maximum Depth of Species = Layers
-        if (maxDepthInLayers > 3 || maxDepthInLayers < 30  ) {
+        if (maxDepthInLayers > 3 && maxDepthInLayers < numberOfInputs+100  ) {
             this.maxDepth = maxDepthInLayers;
         } else {
             this.maxDepth = 10;
@@ -106,23 +106,17 @@ public class Pool {
         // Best reached overall fitness.
         this.maxFitness = 0;
 
-        while (!createNew) {
-            System.out.println(" New (= 'N') or Load (= 'L') ");
-            Scanner scanner = new Scanner(System.in);
-            String input = scanner.nextLine();
-            createNew = true;
-
-            if (input.equals("N") || input.equals("n")) {
-                // New
-                createSpecies(this.input, this.output);
-            } else if (input.equals("L") || input.equals("l")) {
-                // Load
-                loadSpecies();
-            } else {
-                createNew = false;
-                System.out.println(" Input is not valid - repeat");
+        if (createNew) {
+            for (int i = 0; i<maxNumberOfSpecies; i++) {
+                createSpecies();
             }
+
+        } else {
+            System.out.println("Pool - Load from File - no coded, yet.");
+            // Load
+            // loadSpecies();
         }
+
 
         System.out.println("Pool is created.");
 
@@ -214,6 +208,19 @@ public class Pool {
     }
 
 
+    public boolean isEmpty () {
+        if (this.mySpecies.size() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public int size() {
+        return this.mySpecies.size();
+    }
+
+
 
     public void timeToMutate () {
         //	loop all species
@@ -257,8 +264,8 @@ public class Pool {
     }
 
 
-    public void createSpecies (Neuron [] input, int output) {
-        int startNumber = 10;
+    public void createSpecies () {
+        int startNumber = this.maxSpecies-10;   // Initial number of Species
 
         if (startNumber <= 0) {
             startNumber = 10;
@@ -270,7 +277,7 @@ public class Pool {
 
         Species temp_Species;
         for (int i = 0; i < startNumber; i++ ) {
-            temp_Species = new Species (output);
+            temp_Species = new Species (this.output);
             temp_Species.setInAndOut(this.Incoming);
             // add to already created
             this.mySpecies.add(temp_Species);

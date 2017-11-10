@@ -37,6 +37,8 @@ public class Neuron {
         this.myLayer = -1;
         this.myBias = 0.1;
         this.biasChange = 0.0;
+        this.incoming = new LinkedList <Neuron>();
+        this.outgoing = new LinkedList <Neuron>();
     }
 
 
@@ -124,21 +126,25 @@ public class Neuron {
 
 
     public void computeLayer () {
-        int newL = 0;
+        int newL = -1;
 
         // search for Layer
-        for (Neuron e : this.incoming) {
-            if (e.getLayer() > newL) {
-                newL = e.getLayer()+1;
+        if (this.incoming.size()<1) {
+            this.setlayer(-1);
+        } else {
+            for (Neuron e : this.incoming) {
+                if (e.getLayer()+1 > newL) {
+                    newL = e.getLayer()+1;
+                }
             }
-        }
-        // compare with existing entry
-        if (!(this.getLayer() == newL)) {
-            // change entry
-            this.setlayer(newL);
-            // update following
-            for (Neuron e : this.outgoing) {
-                e.computeLayer();
+            // compare with existing entry
+            if (!(this.getLayer() == newL)) {
+                // change entry
+                this.setlayer(newL);
+                // update following
+                for (Neuron e : this.outgoing) {
+                    e.computeLayer();
+                }
             }
         }
     }

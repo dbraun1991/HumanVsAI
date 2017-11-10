@@ -253,6 +253,12 @@ public class Game {
 
 
 
+    public double[][] getGameWindow () {
+        return this.myGameWindow;
+    }
+
+
+
     public void start(GUI gui) {
         this.isRunning = true;
         this.gui = gui;

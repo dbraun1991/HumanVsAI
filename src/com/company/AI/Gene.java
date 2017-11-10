@@ -22,8 +22,8 @@ public class Gene {
     private LinkedList <Neuron> Incoming;
     private LinkedList <Neuron> Outgoing;
 
-    private ArrayList <Neuron> into;
-    private ArrayList <Neuron> out;
+    private ArrayList <Neuron> into;    // Neurons that are somehow influencing one of myNeurons
+    private ArrayList <Neuron> out;     // Neurons that are somehow influencing out
     private ArrayList <Neuron> myNeurons;
     private double weight;
     private boolean enabled;
@@ -36,10 +36,13 @@ public class Gene {
     public Gene () {
 
         // Neuron - (1st from createFirstConnection)
-        this.into = null;
+        this.into = new ArrayList<Neuron>();
 
         // Neuron - (1st from createFirstConnection)
-        this.out = null;
+        this.out = new ArrayList<Neuron>();
+
+        // Neuron - all belonging to this gene
+        this.myNeurons = new ArrayList<Neuron>();
 
         // Amount which is send to next.
         this.weight = 0.0;
@@ -175,12 +178,43 @@ public class Gene {
                 newL = e.getLayer();
             }
         }
+        setLayers(newL);
 
-        this.layers = newL;
+        // All "out" = max layers
+        for (Neuron n : this.getOutgoing()) {
+            n.setlayer(this.layers);
+        }
     }
 
     public int getlayerDepth () {
         return this.layers;
+    }
+
+
+    public int getNeuronsOnLayerCount (int layer) {
+        if (layer > getlayerDepth()) {
+            return 0;
+        } else {
+            int sum = 0;
+            for (Neuron n : myNeurons) {
+                if (n.getLayer() == layer) {
+                    sum++;
+                }
+            }
+            return sum;
+        }
+    }
+
+    public LinkedList<Neuron> getNeuronsOnLayer(int layer) {
+        LinkedList<Neuron> myReturn = new LinkedList<>();
+        if (!(layer > getlayerDepth() )) {
+            for (Neuron n : myNeurons) {
+                if (n.getLayer() == layer && !(myReturn.contains(n)) ) {
+                    myReturn.add(n);
+                }
+            }
+        }
+        return myReturn;
     }
 
 
@@ -209,6 +243,9 @@ public class Gene {
 
         // Finalize
         reComputeLayers();
+
+        // calculate Depth
+        updateLayers();
     }
 
 
@@ -718,10 +755,12 @@ public class Gene {
     public void connectNodes(Neuron In, Neuron Out) {
         // test "belongs to Incoming"
         if ( this.Incoming.contains(In) && ( ! (this.into.contains(In)) ) ) {
+            // another Neuron is already connected to this Incoming-Neuron
             this.into.add(In);
         }
         // test "belongs to Outgoing"
         if (this.Outgoing.contains(Out) && ( ! (this.out.contains(Out)) ) ) {
+            // another Neuron is already connected to this Incoming-Neuron
             this.out.add(Out);
         }
         // test if already connected
@@ -761,20 +800,15 @@ public class Gene {
             this.out.remove(eO);
             eO = null;
         }
-
     }
+
 
 
     public void reComputeLayers () {
-        for (Neuron e : this.into) {
-            if (this.myNeurons.contains(e)) {
-                e.computeLayer();
-            }
+        for (Neuron n : myNeurons) {
+            n.computeLayer();
         }
     }
-
-
-
 
 
 

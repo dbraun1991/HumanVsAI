@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.AI.*;
 import com.company.GUI.GUI;
 import com.company.Game.Game;
 
@@ -10,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 class Menue implements KeyListener {
 
@@ -33,14 +36,20 @@ class Menue implements KeyListener {
     private JButton btnNewAI;       // calculate new AI pool
     private JButton btnShowAllAI;   // show all AI in pool (structure only)
     private JButton btnRunBestAI;   // show best AI
+    private JButton workoutAI;      // show best AI
     private JButton btnSaveAI;      // save AI to file
+    // Slider
+    JSlider sliNextAI;
     // Label
     private JLabel lblScore;        // shows actual score
     private JLabel lblEnter;        // information to hit ENTER for move
     private JLabel lblResult;       // Result
     private JLabel lblAISettings;   // Session-settings
     private JLabel lblAIProperties; // Properties of specific AI
-
+    private JLabel lblSecToNextAI;  // Seconds until next AI will be shown
+    private JLabel lblLayerAIs;     // Layers of actual AI
+    private JLabel lblNodesAI;      // Nodes of actual AI
+    private JLabel lblFitnessAI;    // Fitness of actual AI
     // Textbox
     private JTextField txtScore;
     // Checkbox (Input)
@@ -51,6 +60,7 @@ class Menue implements KeyListener {
     private Game game;
 
     // AI
+    Pool myPool;
     // ... ... ...
 
 
@@ -74,7 +84,6 @@ class Menue implements KeyListener {
 
     void operate () {
         // call GUI
-
         game = new Game(8,5);
         btnLoadGame = new JButton("Load Game");
         btnLoadGame.setBounds(20,20,100,40);
@@ -259,7 +268,9 @@ class Menue implements KeyListener {
         btnNewAI.setBounds(220,20,150,40);
         btnNewAI.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) { }
+            public void actionPerformed(ActionEvent e) {
+                computeNewAI(); // new
+            }
         });
         frame.getContentPane().add(btnNewAI);
 
@@ -270,32 +281,50 @@ class Menue implements KeyListener {
         btnLoadAI.setBounds(420,20,150,40);
         btnLoadAI.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) { }
+            public void actionPerformed(ActionEvent e) {
+                loadAI();   // Load from file
+            }
         });
         frame.getContentPane().add(btnLoadAI);
 
         // - - - - - - - - - - - -
 
-        // Show best Calculations
+        // Load
+        workoutAI = new JButton("Workout AI");
+        workoutAI.setEnabled(false);
+        workoutAI.setBounds(620,50,150,40);
+        workoutAI.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // change AI and measure
+            }
+        });
+        frame.getContentPane().add(workoutAI);
+
+        // - - - - - - - - - - - -
+
+        // Show All (one by one)
         btnShowAllAI = new JButton("Show Pool");
         btnShowAllAI.setEnabled(false);
-        btnShowAllAI.setBounds(620,20,150,40);
+        btnShowAllAI.setBounds(820,50,150,40);
         btnShowAllAI.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                showPool();
             }
         });
         frame.getContentPane().add(btnShowAllAI);
 
         // - - - - - - - - - - - -
 
-        // Show best Calculations
+        // Show best AI
         btnRunBestAI = new JButton("Run Best");
         btnRunBestAI.setEnabled(false);
-        btnRunBestAI.setBounds(620,20,150,40);
+        btnRunBestAI.setBounds(1020,50,150,40);
         btnRunBestAI.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                runBest();
             }
         });
         frame.getContentPane().add(btnRunBestAI);
@@ -305,18 +334,20 @@ class Menue implements KeyListener {
         // New
         btnSaveAI = new JButton("Save AI");
         btnSaveAI.setEnabled(false);
-        btnSaveAI.setBounds(820,20,150,40);
+        btnSaveAI.setBounds(1220,20,150,40);
         btnSaveAI.requestFocus();
         btnSaveAI.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) { saveAI(); }
+            public void actionPerformed(ActionEvent e) {
+                saveAI();
+            }
         });
         frame.getContentPane().add(btnSaveAI);
 
         // - - - - - - - - - - - -
-        gui.pntAIArea();
+        gui.pntAIArea(game, null, null);
         // - - - - - - - - - - - -
-        // Labels
+        // Settings
         lblAISettings = new JLabel("Setting", SwingConstants.CENTER);
         lblAISettings.setBounds(20,150,130,40);
         lblAISettings.setFont(new Font(lblAISettings.getFont().getName(),Font.PLAIN, 20));
@@ -324,14 +355,57 @@ class Menue implements KeyListener {
         lblAISettings.setBackground(Color.lightGray);
         lblAISettings.setVisible(true);
         frame.getContentPane().add(lblAISettings);
+        // Slider
+        lblSecToNextAI = new JLabel("Seconds until next AI will be shown", SwingConstants.CENTER);
+        lblSecToNextAI.setBounds(20,200,200,40);
+        lblSecToNextAI.setForeground(Color.white);
+        lblSecToNextAI.setBackground(Color.lightGray);
+        lblSecToNextAI.setVisible(true);
+        frame.getContentPane().add(lblSecToNextAI);
+
+        int sliderMin = 0;
+        int sliderMax = 15;
+        int sliderInitial = 5;
+        sliNextAI = new JSlider(JSlider.HORIZONTAL, sliderMin, sliderMax, sliderInitial);
+        sliNextAI.setMajorTickSpacing(5);
+        sliNextAI.setMinorTickSpacing(1);
+        sliNextAI.setPaintTicks(true);
+        sliNextAI.setPaintLabels(true);
+        sliNextAI.setBounds(10,240,225,50);
+        frame.getContentPane().add(sliNextAI);
+
         // - - - - - - - - - - - -
-        lblAIProperties = new JLabel("AI Properties", SwingConstants.CENTER);
-        lblAIProperties.setBounds(width-200,150,130,40);
+        // Properties
+        lblAIProperties = new JLabel("AI - Properties", SwingConstants.LEFT);
+        lblAIProperties.setBounds(width-180,150,130,40);
         lblAIProperties.setFont(new Font(lblAIProperties.getFont().getName(),Font.PLAIN, 20));
         lblAIProperties.setForeground(Color.white);
         lblAIProperties.setBackground(Color.lightGray);
         lblAIProperties.setVisible(true);
         frame.getContentPane().add(lblAIProperties);
+        // AI - Layers
+        lblLayerAIs = new JLabel("Layers", SwingConstants.LEFT);
+        lblLayerAIs.setBounds(width-220,200,100,40);
+        lblLayerAIs.setForeground(Color.white);
+        lblLayerAIs.setBackground(Color.lightGray);
+        lblLayerAIs.setVisible(true);
+        frame.getContentPane().add(lblLayerAIs);
+        // AI - Nodes
+        lblNodesAI = new JLabel("Nodes", SwingConstants.LEFT);
+        lblNodesAI.setBounds(width-220,240,100,40);
+        lblNodesAI.setForeground(Color.white);
+        lblNodesAI.setBackground(Color.lightGray);
+        lblNodesAI.setVisible(true);
+        frame.getContentPane().add(lblNodesAI);
+        // AI - Fitness
+        lblFitnessAI = new JLabel("Fitness", SwingConstants.LEFT);
+        lblFitnessAI.setBounds(width-220,280,100,40);
+        lblFitnessAI.setForeground(Color.white);
+        lblFitnessAI.setBackground(Color.lightGray);
+        lblFitnessAI.setVisible(true);
+        frame.getContentPane().add(lblFitnessAI);
+
+
         // - - - - - - - - - - - -
         frame.repaint(100);
 
@@ -353,6 +427,31 @@ class Menue implements KeyListener {
     }
 
 
+
+    private void computeNewAI() {
+        // create new Pool
+        int MaxNumSpecies = 40;     // Inputs = 5*8 = 40
+        int NumberOfInputs = 40;    // Fields = 5*8 = 40
+        int NumberOfOutputs = 2;    // Move directions = 2
+        int MaxNumOfNodes = 1600;   // Inputs^2 = (5*8)^2 = (40)^2 = 1600
+        int MaxDepthLayers = 40;    // Inputs = 5*8 = 40
+        boolean createNew = true;   // create a new Pool
+
+        myPool = new Pool(MaxNumSpecies,NumberOfInputs,NumberOfOutputs,MaxNumOfNodes,MaxDepthLayers,createNew);
+
+        System.out.println(" - - - ");
+        System.out.println("Success !!!");
+        System.out.println(" - - - ");
+
+        // enable buttons
+        workoutAI.setEnabled(true);
+        btnShowAllAI.setEnabled(true);
+        btnRunBestAI.setEnabled(true);
+        btnSaveAI.setEnabled(true);
+    }
+
+
+
     private void playAI (int actualAI) {
         // start Game
 
@@ -369,20 +468,99 @@ class Menue implements KeyListener {
 
 
 
-    private int getBestAI(int [] thePool) {
-        return thePool[0];
+    private Species getBestAI() {
+        if (myPool.isEmpty()) {
+            return null;
+        } else {
+            return myPool.getSpecie(0);
+        }
     }
 
 
 
     private void loadAI() {
-        // toDooo;
+        // Load from file
     }
 
 
 
-    private void computeNewAI() {
-        // toDooo;
+    private void showPool() {
+        // show all (one by one)
+        if (!(myPool==null)) {
+
+            // disable buttons
+
+
+            // show each genom in species
+            Species s;
+            Genom gnom;
+            Gene gn;
+            // Properties of genom
+            int actLayers = -1;
+            int allNeurons = 0;
+            LinkedList <Neuron> [] layerList;
+
+            // Loop Species
+            for (int i = 0; i< myPool.size();i++) {
+                s = myPool.getSpecie(i);
+
+                // - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+                // Loop Genom
+                for (int j = 0; j < s.size(); j++) {
+
+                    gnom = s.getGenome(j);
+                    actLayers = gnom.getlayerDepth();
+                    lblLayerAIs.setText("Nodes :  " + actLayers);
+
+                    // LayerList shall contain all nodes in one layer
+                    layerList = new LinkedList[actLayers+3];
+
+                    // Loop Genes
+                    for (int k = 0; k < gnom.size(); k++) {
+                        // Get gene
+                        gn = gnom.getGene(k);
+                        // Sum size
+                        allNeurons = allNeurons + gn.getMySize();
+
+                        for (int layer = 0; layer < gn.getlayerDepth(); layer++) {
+                            // Create layers
+                            if (layerList[layer] == null) {
+                                layerList[layer] = gn.getNeuronsOnLayer(layer);
+                            } else {
+                                layerList[layer].addAll(gn.getNeuronsOnLayer(layer));
+                            }
+                        }
+                        layerList[actLayers] = gn.getOutgoing();
+                    }
+                    lblNodesAI.setText("Nodes :  " + allNeurons);
+                    // fitness
+                    lblFitnessAI.setText("Fitness :  " + " - not filled in -");
+
+                    gui.pntAIArea(game, layerList, myPool);
+
+                    // wait until showing next
+                    try {
+                        for (int p = 0; p < sliNextAI.getValue()*1000+1; p=p+10) {
+                            Thread.sleep(10);
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Menue - showPool - ThreadSleep - Fail");
+                    }
+                }
+
+                // - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+            }
+
+        }
+
+    }
+
+
+
+    private void runBest() {
+        // running best from pool
     }
 
 

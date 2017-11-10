@@ -41,6 +41,8 @@ public class Species {
         // AverageFitness through all trainings (runs) [staleness]
         this.averageFitness = 0;
 
+        this.Incoming = new LinkedList <Neuron> ();
+
         this.Outgoing = new LinkedList <Neuron> ();
         for (int i = 0; i < outputs; i++) {
             this.Outgoing.add( new Neuron() );
@@ -127,6 +129,12 @@ public class Species {
     public int getAverageFitness() {
         return this.averageFitness;
     }
+
+    public int size() {
+        return this.myGenome.size();
+    }
+
+
 
 
     private void adjustFitness (int newFitness) {
