@@ -345,8 +345,6 @@ class Menue implements KeyListener {
         frame.getContentPane().add(btnSaveAI);
 
         // - - - - - - - - - - - -
-        gui.pntAIArea(game, null, null);
-        // - - - - - - - - - - - -
         // Settings
         lblAISettings = new JLabel("Setting", SwingConstants.CENTER);
         lblAISettings.setBounds(20,150,130,40);
@@ -355,7 +353,7 @@ class Menue implements KeyListener {
         lblAISettings.setBackground(Color.lightGray);
         lblAISettings.setVisible(true);
         frame.getContentPane().add(lblAISettings);
-        // Slider
+        // Label
         lblSecToNextAI = new JLabel("Seconds until next AI will be shown", SwingConstants.CENTER);
         lblSecToNextAI.setBounds(20,200,200,40);
         lblSecToNextAI.setForeground(Color.white);
@@ -365,7 +363,7 @@ class Menue implements KeyListener {
 
         int sliderMin = 0;
         int sliderMax = 15;
-        int sliderInitial = 5;
+        int sliderInitial = 3;
         sliNextAI = new JSlider(JSlider.HORIZONTAL, sliderMin, sliderMax, sliderInitial);
         sliNextAI.setMajorTickSpacing(5);
         sliNextAI.setMinorTickSpacing(1);
@@ -405,9 +403,10 @@ class Menue implements KeyListener {
         lblFitnessAI.setVisible(true);
         frame.getContentPane().add(lblFitnessAI);
 
-
         // - - - - - - - - - - - -
-        frame.repaint(100);
+        gui.pntAIArea(game, null, null);
+        // - - - - - - - - - - - -
+        frame.repaint(10);
 
 
         // while (time/ repitition is not reached)
@@ -509,12 +508,23 @@ class Menue implements KeyListener {
                 // Loop Genom
                 for (int j = 0; j < s.size(); j++) {
 
+                    if ( !(i==0) ){
+                        // wait until showing next
+                        try {
+                            for (int p = 0; p < sliNextAI.getValue()*1000+1; p=p+10) {
+                                Thread.sleep(10);
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Menue - showPool - ThreadSleep - Fail");
+                        }
+                    }
+
                     gnom = s.getGenome(j);
                     actLayers = gnom.getlayerDepth();
                     lblLayerAIs.setText("Nodes :  " + actLayers);
 
                     // LayerList shall contain all nodes in one layer
-                    layerList = new LinkedList[actLayers+3];
+                    layerList = new LinkedList[actLayers+1];
 
                     // Loop Genes
                     for (int k = 0; k < gnom.size(); k++) {
@@ -539,14 +549,9 @@ class Menue implements KeyListener {
 
                     gui.pntAIArea(game, layerList, myPool);
 
-                    // wait until showing next
-                    try {
-                        for (int p = 0; p < sliNextAI.getValue()*1000+1; p=p+10) {
-                            Thread.sleep(10);
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Menue - showPool - ThreadSleep - Fail");
-                    }
+                    // - - - - - - - - - - - -
+                    frame.repaint(100);
+                    // - - - - - - - - - - - -
                 }
 
                 // - - - - - - - - - - - - - - - - - - - - - - - - - -
