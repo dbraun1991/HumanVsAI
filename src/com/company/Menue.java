@@ -552,8 +552,9 @@ class Menue implements KeyListener {
                     // - - - - - - - - - - - -
                     frame.repaint(100);
                     // - - - - - - - - - - - -
+                    j = s.size()+1;
                 }
-
+                i = myPool.size()+1;
                 // - - - - - - - - - - - - - - - - - - - - - - - - - -
 
             }
