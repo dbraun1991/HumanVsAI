@@ -3,6 +3,8 @@ package com.company.AI;
 
 
 
+        import sun.awt.image.ImageWatched;
+
         import java.util.Hashtable;
         import java.util.LinkedList;
         import java.util.UUID;
@@ -86,6 +88,9 @@ public class Neuron {
     public void setBiasChange(double BiasChange) {
         this.biasChange = BiasChange;
     }
+
+
+    public LinkedList<Neuron> getIncoming() { return this.incoming; }
 
 
     public void raiseBias() {

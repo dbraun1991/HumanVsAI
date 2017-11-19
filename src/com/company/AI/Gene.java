@@ -249,9 +249,7 @@ public class Gene {
     }
 
 
-    public Neuron pickRandom (LinkedList <Neuron> source) {
-        return source.get( (int) ( ( Math.random() * 10.000 ) % source.size() ) );
-    }
+    public Neuron pickRandom (LinkedList <Neuron> source) { return source.get( (int)( Math.random() * 1000 ) % source.size() ); }
 
 
 

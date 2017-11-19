@@ -76,7 +76,8 @@ class Menue implements KeyListener {
         frame.pack();
         frame.setLocation(10,10);
         frame.setVisible(true);
-        frame.repaint(100);
+        frame.revalidate();
+        frame.repaint();
 
 
 
@@ -134,7 +135,8 @@ class Menue implements KeyListener {
 
                 // - - - - - - - - - - - -
 
-                frame.repaint(100);
+                frame.revalidate();
+                frame.repaint();
             }
         });
         frame.getContentPane().add(btnLoadGame);
@@ -250,7 +252,8 @@ class Menue implements KeyListener {
         txtScore.addKeyListener(this);
         txtScore.requestFocus();
 
-        frame.repaint(100);
+        frame.revalidate();
+        frame.repaint();
 
         // game open for input (key listener)
     }
@@ -406,7 +409,8 @@ class Menue implements KeyListener {
         // - - - - - - - - - - - -
         gui.pntAIArea(game, null, null);
         // - - - - - - - - - - - -
-        frame.repaint(10);
+        frame.revalidate();
+        frame.repaint();
 
 
         // while (time/ repitition is not reached)
@@ -550,11 +554,12 @@ class Menue implements KeyListener {
                     gui.pntAIArea(game, layerList, myPool);
 
                     // - - - - - - - - - - - -
-                    frame.repaint(100);
+                    frame.revalidate();
+                    frame.repaint();
                     // - - - - - - - - - - - -
-                    j = s.size()+1;
+                    // j = s.size()+1;
                 }
-                i = myPool.size()+1;
+                // i = myPool.size()+1;
                 // - - - - - - - - - - - - - - - - - - - - - - - - - -
 
             }
@@ -606,7 +611,8 @@ class Menue implements KeyListener {
         // restart
         operate();
 
-        frame.repaint(100);
+        frame.revalidate();
+        frame.repaint();
     }
 
 
@@ -643,7 +649,9 @@ class Menue implements KeyListener {
 
                 // send to Game
                 game.nextGameState(newInputs);
-                frame.repaint(100);
+
+                frame.revalidate();
+                frame.repaint();
 
                 // reset checkboxes
                 chkUP.setSelected(false);
@@ -688,7 +696,8 @@ class Menue implements KeyListener {
             lblResult.requestFocus();
             frame.getContentPane().add(lblResult);
 
-            frame.repaint(100);
+            frame.revalidate();
+            frame.repaint();
 
         }
 

@@ -87,8 +87,11 @@ public class Viewer {
                 } else if (map[i0][i1] == 0.0) {
                     g.setColor(Color.blue);	    // person
                 }
+                // fill Tile
                 g.fillRect(canvasX+(sqrPix*i1)+1,canvasY+(sqrPix*i0)+1, sqrPix-1,sqrPix-1);
+
                 if (lastRow && g.getColor()==Color.lightGray) {
+                    // fill if Lava
                     g.setColor(Color.red);
                     g.fillRect(canvasX+(sqrPix*i1)+1,canvasY+(sqrPix*i0)+(sqrPix/2)+1, sqrPix-1,(sqrPix/2)-1);
                 }
